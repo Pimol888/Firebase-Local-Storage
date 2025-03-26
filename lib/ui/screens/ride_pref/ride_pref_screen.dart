@@ -1,9 +1,10 @@
+import 'package:firebase_and_localstorage/model/ride/ride_pref.dart';
+import 'package:firebase_and_localstorage/ui/provider/async_value.dart';
+import 'package:firebase_and_localstorage/ui/provider/ride_prefs_provider.dart';
+import 'package:firebase_and_localstorage/ui/widgets/errors/bla_error_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../../../model/ride/ride_pref.dart';
-import '../../../service/ride_prefs_service.dart';
+import 'package:provider/provider.dart';
 import '../../theme/theme.dart';
-
 import '../../../utils/animations_util.dart';
 import '../rides/rides_screen.dart';
 import 'widgets/ride_pref_form.dart';
@@ -16,32 +17,30 @@ const String blablaHomeImagePath = 'assets/images/blabla_home.png';
 /// - Enter his/her ride preference and launch a search on it
 /// - Or select a last entered ride preferences and launch a search on it
 ///
-class RidePrefScreen extends StatefulWidget {
+
+
+class RidePrefScreen extends StatelessWidget{
   const RidePrefScreen({super.key});
 
-  @override
-  State<RidePrefScreen> createState() => _RidePrefScreenState();
-}
-
-class _RidePrefScreenState extends State<RidePrefScreen> {
-  onRidePrefSelected(RidePreference newPreference) async {
+  onRidePrefSelected(BuildContext context, RidePreference newPreference) async {
+    // init provider
+    final ridePrefProvider = context.read<RidesPrefsProvider>();
     // 1 - Update the current preference
-    RidePrefService.instance.setCurrentPreference(newPreference);
+    ridePrefProvider.setCurrentPreference(newPreference);
 
     // 2 - Navigate to the rides screen (with a buttom to top animation)
-    await Navigator.of(context)
-        .push(AnimationUtils.createBottomToTopRoute(RidesScreen()));
+    await Navigator.of(context).push(AnimationUtils.createBottomToTopRoute(RidesScreen()));
 
     // 3 - After wait  - Update the state   -- TODO MAKE IT WITH STATE MANAGEMENT
-    setState(() {});
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    RidePreference? currentRidePreference =
-        RidePrefService.instance.currentPreference;
-    List<RidePreference> pastPreferences =
-        RidePrefService.instance.getPastPreferences();
+
+    final ridePrefProvider = context.read<RidesPrefsProvider>();
+
+    RidePreference? currentRidePreference = ridePrefProvider.currentPreference;
 
     return Stack(
       children: [
@@ -76,16 +75,7 @@ class _RidePrefScreenState extends State<RidePrefScreen> {
                   // 2.2 Optionally display a list of past preferences
                   SizedBox(
                     height: 200, // Set a fixed height
-                    child: ListView.builder(
-                      shrinkWrap: true, // Fix ListView height issue
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: pastPreferences.length,
-                      itemBuilder: (ctx, index) => RidePrefHistoryTile(
-                        ridePref: pastPreferences[index],
-                        onPressed: () =>
-                            onRidePrefSelected(pastPreferences[index]),
-                      ),
-                    ),
+                    child: _buildRideHistory(context,onRidePrefSelected)
                   ),
                 ],
               ),
@@ -95,6 +85,39 @@ class _RidePrefScreenState extends State<RidePrefScreen> {
       ],
     );
   }
+}
+
+Widget _buildRideHistory(BuildContext context,Function(BuildContext,RidePreference) onRidePrefSelected){
+    
+  final ridePrefProvider = context.watch<RidesPrefsProvider>();
+  AsyncValue<List<RidePreference>>? postValue = ridePrefProvider.pastRidePref;
+
+  if(postValue==null){
+    postValue = AsyncValue.loading();
+    ridePrefProvider.fetchPastPreferences();
+  }
+ 
+   switch(postValue.state){
+      case AsyncValueState.loading:
+        return Center(child: CircularProgressIndicator()); // display a progress
+
+      case AsyncValueState.error:
+        return BlaError(message: postValue.error as String,); // display a error
+
+      case AsyncValueState.success:
+
+        final List<RidePreference> pastRidePred = postValue.data!.reversed.toList();
+
+        return  ListView.builder(
+          shrinkWrap: true, // Fix ListView height issue
+          physics: AlwaysScrollableScrollPhysics(),
+          itemCount: pastRidePred.length,
+          itemBuilder: (ctx, index) => RidePrefHistoryTile(
+            ridePref: pastRidePred[index],
+            onPressed: () =>  onRidePrefSelected(context,pastRidePred[index]),
+          ),
+        );
+    }
 }
 
 class BlaBackground extends StatelessWidget {

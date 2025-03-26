@@ -1,5 +1,5 @@
+import 'package:firebase_and_localstorage/model/ride/ride_pref.dart';
 import 'package:flutter/material.dart';
-import '../../../../model/ride/ride_pref.dart';
 import '../../../theme/theme.dart';
 import '../../../../utils/date_time_util.dart';
 

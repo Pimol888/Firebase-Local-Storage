@@ -1,7 +1,6 @@
+import 'package:firebase_and_localstorage/model/location/locations.dart';
+import 'package:firebase_and_localstorage/model/ride/ride_pref.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../model/location/locations.dart';
-import '../../../../model/ride/ride_pref.dart';
 import '../../../theme/theme.dart';
 import '../../../../utils/animations_util.dart';
 import '../../../../utils/date_time_util.dart';
@@ -27,7 +26,7 @@ class RidePrefForm extends StatefulWidget {
   });
 
   final RidePreference? initialPreference;
-  final Function(RidePreference preference) onSubmit;
+  final Function(BuildContext context,RidePreference preference) onSubmit;
 
   @override
   State<RidePrefForm> createState() => _RidePrefFormState();
@@ -47,6 +46,24 @@ class _RidePrefFormState extends State<RidePrefForm> {
   void initState() {
     super.initState();
 
+    if (widget.initialPreference != null) {
+      RidePreference current = widget.initialPreference!;
+      departure = current.departure;
+      arrival = current.arrival;
+      departureDate = current.departureDate;
+      requestedSeats = current.requestedSeats;
+    } else {
+      // If no given preferences, we select default ones :
+      departure = null; // User shall select the departure
+      departureDate = DateTime.now(); // Now  by default
+      arrival = null; // User shall select the arrival
+      requestedSeats = 1; // 1 seat book by default
+    }
+  }
+
+  @override
+  void didUpdateWidget (RidePrefForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.initialPreference != null) {
       RidePreference current = widget.initialPreference!;
       departure = current.departure;
@@ -114,7 +131,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
       );
 
       // 3 - Callback withg the new preference
-      widget.onSubmit(newPreference);
+      widget.onSubmit(context ,newPreference);
     }
   }
 

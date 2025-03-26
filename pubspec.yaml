@@ -1,4 +1,4 @@
-name: week_3_blabla_project
+name: firebase_and_localstorage
 description: "A new Flutter project."
 version: 1.0.0+1
 
@@ -12,6 +12,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
   flutter_svg: ^2.0.17
+  provider: ^6.1.2
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +33,7 @@ flutter:
  
   assets:
     - assets/images/
+ 
  
 
   # To add assets to your application, add an assets section, like this:

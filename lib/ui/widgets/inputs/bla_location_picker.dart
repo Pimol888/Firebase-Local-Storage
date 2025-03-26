@@ -1,15 +1,13 @@
+import 'package:firebase_and_localstorage/model/location/locations.dart';
+import 'package:firebase_and_localstorage/service/locations_service.dart';
 import 'package:flutter/material.dart';
-import 'package:week_3_blabla_project/model/location/locations.dart';
-
-import '../../../service/locations_service.dart';
 import '../../theme/theme.dart';
 
 ///
 /// This full-screen modal is in charge of providing (if confirmed) a selected location.
 ///
 class BlaLocationPicker extends StatefulWidget {
-  final Location?
-      initLocation; // The picker can be triguer with an existing location name
+  final Location? initLocation; // The picker can be triguer with an existing location name
 
   const BlaLocationPicker({super.key, this.initLocation});
 

@@ -1,7 +1,6 @@
+import 'package:firebase_and_localstorage/model/ride/ride_pref.dart';
 import 'package:flutter/material.dart';
 import '../../../widgets/actions/bla_icon_button.dart';
-
-import '../../../../model/ride/ride_pref.dart';
 import '../../../theme/theme.dart';
 import '../../ride_pref/widgets/ride_pref_form.dart';
 
@@ -19,7 +18,7 @@ class _RidePrefModalState extends State<RidePrefModal> {
     Navigator.of(context).pop();
   }
 
-  void onSubmit(RidePreference newPreference) {
+  void onSubmit(BuildContext context,RidePreference newPreference) {
     Navigator.of(context).pop(newPreference);
   }
 
