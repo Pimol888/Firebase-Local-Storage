@@ -1,11 +1,6 @@
 import '../model/ride/ride_pref.dart';
 import '../repository/ride_preferences_repository.dart';
 
-////
-///   This service handles:
-///   - The past ride preferences
-///   - The currennt ride preferences
-///
 class RidePrefService {
   // Static private instance
   static RidePrefService? _instance;
@@ -55,11 +50,11 @@ class RidePrefService {
   }
 
   // Past preferences
-  List<RidePreference> getPastPreferences() {
+  Future<List<RidePreference>> getPastPreferences() {
     return repository.getPastPreferences();
   }
 
-  void addPreference(RidePreference preference) {
+  Future<void> addPreference(RidePreference preference) {
     return repository.addPreference(preference);
   }
 }

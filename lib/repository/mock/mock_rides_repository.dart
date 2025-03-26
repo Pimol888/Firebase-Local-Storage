@@ -1,10 +1,9 @@
-import '../../model/ride/ride.dart';
-import '../../model/ride/ride_filter.dart';
-import '../../model/ride/ride_pref.dart';
-import '../../repository/rides_repository.dart';
-
-import '../../model/location/locations.dart';
-import '../../model/user/user.dart';
+import 'package:firebase_and_localstorage/model/location/locations.dart';
+import 'package:firebase_and_localstorage/model/ride/ride.dart';
+import 'package:firebase_and_localstorage/model/ride/ride_filter.dart';
+import 'package:firebase_and_localstorage/model/ride/ride_pref.dart';
+import 'package:firebase_and_localstorage/model/user/user.dart';
+import '../rides_repository.dart';
 
 class MockRidesRepository extends RidesRepository {
   final List<Ride> _allRides = [];

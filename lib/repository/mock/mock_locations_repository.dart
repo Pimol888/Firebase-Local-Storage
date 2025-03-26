@@ -1,4 +1,4 @@
-import '../../model/location/locations.dart';
+import 'package:firebase_and_localstorage/model/location/locations.dart';
 import '../locations_repository.dart';
 
 class MockLocationsRepository extends LocationsRepository {
